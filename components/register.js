@@ -1,4 +1,5 @@
 import { html, render } from 'https://unpkg.com/lit-html?module';
+import { register } from '../services/authService.js';
 
 const template = (ctx) => html`
 <form class="text-center border border-light p-5" action="#" method="post" @submit=${ctx.onSubmit}>
@@ -39,16 +40,25 @@ export default class Register extends HTMLElement {
         let repeatPassword = formData.get('repeatPassword');
 
         if (password.length < 6) {
-            console.error('Password too short');
+            notify('Password too short', 'error');
             return;
         }
 
         if (password != repeatPassword) {
-            console.error('Passwords must match');
+            notify('Passwords must match', 'error');
             return;
         }
 
-        
+
+        register(email, password)
+            .then(res => {
+                notify('Successful registration!', 'success');
+                // TODO redirect to homepage
+            })
+            .catch(err => {
+                notify(err.message, 'error');
+            });
+
     }
 
     render() {

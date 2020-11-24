@@ -4,7 +4,7 @@ import Home from './components/home.js';
 import Register from './components/register.js';
 
 customElements.define('home-component', Home);
-customElements.define('register-component', Register); 
+customElements.define('register-component', Register);
 
 
 const root = document.getElementById('root');
@@ -20,4 +20,5 @@ router.setRoutes([
         component: 'register-component'
     },
 
-]); 
+]);
+
