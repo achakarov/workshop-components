@@ -1,7 +1,7 @@
 import { html, render } from 'https://unpkg.com/lit-html?module';
 
-const template = () => html`
-<form class="text-center border border-light p-5" action="#" method="post">
+const template = (ctx) => html`
+<form class="text-center border border-light p-5" action="#" method="post" @submit=${ctx.onSubmit}>
     <div class="form-group">
         <label for="email">Email</label>
         <input type="email" class="form-control" placeholder="Email" name="email" value="">
@@ -26,11 +26,32 @@ export default class Register extends HTMLElement {
         super();
 
     }
+
     connectedCallback() {
         this.render();
     }
 
+    onSubmit(e) {
+        e.preventDefault();
+        let formData = new FormData(e.target);
+        let email = formData.get('email');
+        let password = formData.get('password');
+        let repeatPassword = formData.get('repeatPassword');
+
+        if (password.length < 6) {
+            console.error('Password too short');
+            return;
+        }
+
+        if (password != repeatPassword) {
+            console.error('Passwords must match');
+            return;
+        }
+
+        
+    }
+
     render() {
-        render(template(), this);
+        render(template(this), this, { eventContext: this });
     }
 }
