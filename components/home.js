@@ -1,5 +1,5 @@
 import { html, render } from 'https://unpkg.com/lit-html?module';
-import { getUserData } from '../services/authService.js'
+import { getUserData } from '../services/authService.js';
 
 const template = (ctx) => html`
 <div class="jumbotron jumbotron-fluid text-light" style="background-color: #343a40;">

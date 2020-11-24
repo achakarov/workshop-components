@@ -1,5 +1,10 @@
-import { html, render } from 'https://unpkg.com/lit-html?module';
-import { getOneMovie } from '../services/movieService.js';
+import { html, render, directive } from 'https://unpkg.com/lit-html?module';
+import { getOneMovie, likeMovie } from '../services/movieService.js';
+import { getUserData } from '../services/authService.js';
+
+const hasLike = (likes, email) => {
+    return Object.values(likes).some(like => like.creator == email);
+}
 
 const template = (ctx) => html`
 <div class="container">
@@ -12,21 +17,41 @@ const template = (ctx) => html`
         <div class="col-md-4 text-center">
             <h3 class="my-3 ">Movie Description</h3>
             <p>${ctx.description}</p>
+            ${ctx.creator == ctx.user.email
+        ? html`
             <a class="btn btn-danger" href="#">Delete</a>
             <a class="btn btn-warning" href="#">Edit</a>
-            <a class="btn btn-primary" href="#">Like</a>
-            <span class="enrolled-span">Liked 1</span>
+            `
+        : html`
+            ${hasLike(ctx.likes, ctx.user.email)
+                ? html`<span class="enrolled-span">Liked ${Object.keys(ctx.likes).length}</span>`
+                : html`<a class="btn btn-primary" @click=${ctx.onLike}>Like</a>`
+            }
+            `
+    }
         </div>
     </div>
 </div>
 `;
 
 class MovieDetails extends HTMLElement {
+    constructor() {
+        super();
+
+        this.user = getUserData();
+    }
 
     connectedCallback() {
         getOneMovie(this.location.params.id)
             .then(data => {
                 Object.assign(this, data);
+                this.render();
+            });
+    }
+
+    onLike(e) {
+        likeMovie(this.location.params.id, this.user.email)
+            .then(data => {
                 this.render();
             });
     }
