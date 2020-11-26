@@ -13,15 +13,14 @@ export const getAllMovies = async (searchText) => {
 export const getOneMovie = async (id) => {
     let res = await request(`${databaseUrl}/movies/${id}.json`, 'GET');
     return res;
-    // let { email } = authService.getData();
-
-    // let likes = Object.values(res.likes || {});
-    // let alreadyLiked = likes.some(x => x.creator == email);
-
-    // return Object.assign(res, { isOwn: res.creator == email, alreadyLiked, likes: likes.length });
 }
 
 export const likeMovie = async (id, creator) => {
-    let res = await request(`${databaseUrl}/movies/${id}/likes.json`, 'POST', { creator }); 
-    return res; 
+    let res = await request(`${databaseUrl}/movies/${id}/likes.json`, 'POST', { creator });
+    return res;
+}
+
+export const addMovie = async (movieData) => {
+    let res = await request(api.movies, 'POST', movieData);
+    return res;
 }
